@@ -4,6 +4,8 @@ import wave
 import pyaudio
 from pynput import keyboard
 
+from src.core.transcribe.transcribe import transcribe_audio
+
 # Define your hotkey (e.g. Option + L on macOS)
 RECORDING_HOTKEY = {
     keyboard.Key.alt_l,
@@ -93,6 +95,8 @@ def on_activate():
     else:
         print("🛑 Recording stopped.")
         stop_recording()
+        transcription = transcribe_audio(FILENAME)
+        print(f"🔊 Transcription: {transcription}")
 
 
 def on_press(key):
