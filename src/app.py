@@ -6,10 +6,10 @@ from pynput import keyboard
 
 from src.core.transcribe.transcribe import transcribe_audio
 
-# Define your hotkey (e.g. Option + L on macOS)
+# Define your hotkey (e.g. Option + Space on macOS)
 RECORDING_HOTKEY = {
     keyboard.Key.alt_l,
-    keyboard.KeyCode(char="l"),
+    keyboard.Key.space,
 }
 
 current_keys = set()
@@ -120,7 +120,7 @@ listener_thread = threading.Thread(target=start_listener, daemon=True)
 listener_thread.start()
 
 # Keep the main script running (or add tray app here)
-print("🔍 Listening for hotkey... Press Ctrl + Option + L to trigger.")
+print("🔍 Listening for hotkey... Press Option + Space to trigger.")
 
 try:
     while True:
