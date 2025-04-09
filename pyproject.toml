@@ -3,12 +3,11 @@ name = "vox"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.11.6,<3.12"
 dependencies = [
     "pyaudio>=0.2.14",
     "pynput>=1.8.1",
-    "torch==1.10.0+cu102",
-    "torchaudio==0.10.0+cu102",
+    "torch>=2.1.0",
     "whisperx>=3.3.1",
 ]
 
