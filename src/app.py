@@ -1,16 +1,12 @@
 import threading
 
 from src.core.listener.api import start_listener
+from src.core.system.tray import tray_icon
 
-# Run listener in a thread so it doesn't block main thread (useful if you add tray later)
+# Run listener in a thread so it doesn't block main thread
 listener_thread = threading.Thread(target=start_listener, daemon=True)
 listener_thread.start()
 
-# Keep the main script running (or add tray app here)
+# Start the tray icon
 print("🔍 Listening for hotkey... Press Ctrl + Space to trigger.")
-
-try:
-    while True:
-        pass  # Or replace with logic to run other tasks
-except KeyboardInterrupt:
-    print("👋 Exiting...")
+tray_icon.run()

@@ -5,6 +5,7 @@ from pynput.keyboard import Key
 
 from src.core.system.clipboard import paste_content
 from src.core.system.recording import audio_recorder
+from src.core.system.tray import tray_icon
 from src.core.transcribe.transcribe import transcribe_audio
 
 # TODO: Make this configurable
@@ -19,8 +20,10 @@ current_keys = set()
 def on_activate():
     if not audio_recorder.is_recording:
         audio_recorder.start_recording()
+        tray_icon.set_recording()
     else:
         filename = audio_recorder.stop_recording()
+        tray_icon.set_not_recording()
 
         transcription = transcribe_audio(filename)
         print(f"🔊 Transcription: {transcription}")
