@@ -7,7 +7,7 @@ import pyperclip
 from pynput import keyboard
 from pynput.keyboard import Key
 
-from src.core.system.recording import start_recording, stop_recording
+from src.core.system.recording import audio_recorder
 from src.core.transcribe.transcribe import transcribe_audio
 
 # Define your hotkey (e.g. Option + Space on macOS)
@@ -42,19 +42,16 @@ def paste_transcription(transcription: str):
 # Handle Keyboard
 #
 
-IS_RECORDING = False
-
 
 def on_activate():
-    global IS_RECORDING
-    IS_RECORDING = not IS_RECORDING
+    is_recording = not audio_recorder.is_recording
 
-    if IS_RECORDING:
+    if is_recording:
         print("🎙️ Recording started...")
-        start_recording()
+        audio_recorder.start_recording()
     else:
         print("🛑 Recording stopped.")
-        filename = stop_recording()
+        filename = audio_recorder.stop_recording()
         transcription = transcribe_audio(filename)
         print(f"🔊 Transcription: {transcription}")
         paste_transcription(transcription)
