@@ -23,7 +23,7 @@ def on_activate():
         tray_icon.set_recording()
     else:
         filename = audio_recorder.stop_recording()
-        tray_icon.set_not_recording()
+        tray_icon.set_transcribing()
 
         transcription = transcribe_audio(filename)
         print(f"🔊 Transcription: {transcription}")
@@ -32,6 +32,7 @@ def on_activate():
 
         os.remove(filename)
         print(f"🗑️ Deleted recording file: {filename}")
+        tray_icon.set_not_recording()
 
 
 def on_press(key):

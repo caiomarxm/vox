@@ -5,7 +5,6 @@ from PIL import Image, ImageDraw
 class TrayIcon:
     def __init__(self):
         self._icon = None
-        self._is_recording = False
         self._create_icon()
 
     def _create_icon(self):
@@ -19,13 +18,16 @@ class TrayIcon:
 
     def set_recording(self):
         """Set the tray icon to recording state."""
-        self._is_recording = True
         if self._icon:
             self._icon.icon = self._create_recording_icon()
 
+    def set_transcribing(self):
+        """Set the tray icon to transcribing state."""
+        if self._icon:
+            self._icon.icon = self._create_transcribing_icon()
+
     def set_not_recording(self):
         """Set the tray icon to not recording state."""
-        self._is_recording = False
         if self._icon:
             self._icon.icon = self._create_normal_icon()
 
@@ -53,6 +55,21 @@ class TrayIcon:
 
         # Draw small red dot for recording indicator
         draw.ellipse((48, 6, 56, 14), fill="red")
+
+        return image
+
+    def _create_transcribing_icon(self):
+        image = Image.new("RGBA", (64, 64), (0, 0, 0, 0))  # Transparent background
+        draw = ImageDraw.Draw(image)
+
+        # Draw microphone body (white circle)
+        draw.ellipse((20, 10, 44, 34), fill="white", outline="black")
+
+        # Draw microphone handle (white rectangle)
+        draw.rectangle((28, 34, 36, 50), fill="white", outline="black")
+
+        # Draw small purple dot for transcribing indicator
+        draw.ellipse((48, 6, 56, 14), fill="#ADD8E6")  # Light blue color
 
         return image
 
