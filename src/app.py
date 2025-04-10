@@ -7,7 +7,7 @@ listener_thread = threading.Thread(target=start_listener, daemon=True)
 listener_thread.start()
 
 # Keep the main script running (or add tray app here)
-print("🔍 Listening for hotkey... Press Option + Space to trigger.")
+print("🔍 Listening for hotkey... Press Ctrl + Space to trigger.")
 
 try:
     while True:

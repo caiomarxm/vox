@@ -9,7 +9,7 @@ from src.core.transcribe.transcribe import transcribe_audio
 
 # TODO: Make this configurable
 RECORDING_HOTKEY = {
-    Key.alt_l,
+    Key.ctrl_l,
     Key.space,
 }
 
