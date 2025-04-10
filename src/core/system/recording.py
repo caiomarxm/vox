@@ -3,15 +3,9 @@ import wave
 
 import pyaudio
 
-#
-# Audio settings
-#
+from src.config.settings import settings
 
-# TODO: Make these configurable
-FORMAT = pyaudio.paInt16
-CHANNELS = 1
-RATE = 44100
-CHUNK = 1024
+# TODO: Deprecate this and use temporary file
 FILENAME = "recorded_audio.wav"
 
 
@@ -33,16 +27,16 @@ class AudioRecorder:
 
         # Open audio stream
         self.stream = self.audio.open(
-            format=FORMAT,
-            channels=CHANNELS,
-            rate=RATE,
+            format=settings.AUDIO_FORMAT,
+            channels=settings.AUDIO_CHANNELS,
+            rate=settings.AUDIO_RATE,
             input=True,
-            frames_per_buffer=CHUNK,
+            frames_per_buffer=settings.AUDIO_CHUNK,
         )
 
         def record():
             while self.is_recording:
-                data = self.stream.read(CHUNK)
+                data = self.stream.read(settings.AUDIO_CHUNK)
                 self.frames.append(data)
 
         threading.Thread(target=record, daemon=True).start()
@@ -59,9 +53,9 @@ class AudioRecorder:
 
         # Save to file
         with wave.open(FILENAME, "wb") as wf:
-            wf.setnchannels(CHANNELS)
-            wf.setsampwidth(self.audio.get_sample_size(FORMAT))
-            wf.setframerate(RATE)
+            wf.setnchannels(settings.AUDIO_CHANNELS)
+            wf.setsampwidth(self.audio.get_sample_size(settings.AUDIO_FORMAT))
+            wf.setframerate(settings.AUDIO_RATE)
             wf.writeframes(b"".join(self.frames))
 
         print(f"✅ Saved recording to {FILENAME}")
