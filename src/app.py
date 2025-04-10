@@ -1,3 +1,4 @@
+import os
 import platform
 import threading
 import time
@@ -52,10 +53,15 @@ def on_activate():
     else:
         print("🛑 Recording stopped.")
         filename = audio_recorder.stop_recording()
+
         transcription = transcribe_audio(filename)
         print(f"🔊 Transcription: {transcription}")
+
         paste_transcription(transcription)
         print("✅ Copied transcription to clipboard")
+
+        os.remove(filename)
+        print(f"🗑️ Deleted recording file: {filename}")
 
 
 def on_press(key):

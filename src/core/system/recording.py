@@ -1,12 +1,10 @@
+import tempfile
 import threading
 import wave
 
 import pyaudio
 
 from src.config.settings import settings
-
-# TODO: Deprecate this and use temporary file
-FILENAME = "recorded_audio.wav"
 
 
 class AudioRecorder:
@@ -24,6 +22,8 @@ class AudioRecorder:
         print("🎙️ Recording started...")
         self.is_recording = True
         self.frames = []
+
+        self.filename = tempfile.NamedTemporaryFile(suffix=".wav", delete=False).name
 
         # Open audio stream
         self.stream = self.audio.open(
@@ -52,15 +52,15 @@ class AudioRecorder:
         self.stream.close()
 
         # Save to file
-        with wave.open(FILENAME, "wb") as wf:
+        with wave.open(self.filename, "wb") as wf:
             wf.setnchannels(settings.AUDIO_CHANNELS)
             wf.setsampwidth(self.audio.get_sample_size(settings.AUDIO_FORMAT))
             wf.setframerate(settings.AUDIO_RATE)
             wf.writeframes(b"".join(self.frames))
 
-        print(f"✅ Saved recording to {FILENAME}")
+        print(f"✅ Saved recording to {self.filename}")
 
-        return FILENAME
+        return self.filename
 
 
 audio_recorder = AudioRecorder()
