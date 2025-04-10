@@ -1,15 +1,20 @@
+import platform
 import threading
+import time
 import wave
 
 import pyaudio
+import pyautogui
+import pyperclip
 from pynput import keyboard
+from pynput.keyboard import Key
 
 from src.core.transcribe.transcribe import transcribe_audio
 
 # Define your hotkey (e.g. Option + Space on macOS)
 RECORDING_HOTKEY = {
-    keyboard.Key.alt_l,
-    keyboard.Key.space,
+    Key.alt_l,
+    Key.space,
 }
 
 current_keys = set()
@@ -78,6 +83,25 @@ def stop_recording():
     print(f"✅ Saved recording to {FILENAME}")
 
 
+# TODO: Find a better place for this function
+def paste_transcription(transcription: str):
+    pyperclip.copy(transcription)
+
+    time.sleep(0.1)
+
+    # Simulate paste shortcut depending on OS
+    if platform.system() == "Darwin":  # macOS
+        print("🍎 macOS detected")
+        command_key = "command"
+    else:  # Windows/Linux
+        print("🪟 Windows/Linux detected")
+        command_key = "ctrl"
+
+    pyautogui.keyDown(command_key)
+    pyautogui.press("v")
+    pyautogui.keyUp(command_key)
+
+
 #
 # Handle Keyboard
 #
@@ -97,6 +121,8 @@ def on_activate():
         stop_recording()
         transcription = transcribe_audio(FILENAME)
         print(f"🔊 Transcription: {transcription}")
+        paste_transcription(transcription)
+        print("✅ Copied transcription to clipboard")
 
 
 def on_press(key):
