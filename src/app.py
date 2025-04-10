@@ -45,13 +45,9 @@ def paste_transcription(transcription: str):
 
 
 def on_activate():
-    is_recording = not audio_recorder.is_recording
-
-    if is_recording:
-        print("🎙️ Recording started...")
+    if not audio_recorder.is_recording:
         audio_recorder.start_recording()
     else:
-        print("🛑 Recording stopped.")
         filename = audio_recorder.stop_recording()
 
         transcription = transcribe_audio(filename)
