@@ -20,7 +20,7 @@ def transcribe_audio(file_path: str) -> str | None:
     print("✨ Transcription complete!")
 
     # NOTE: We don't need timestamps, so we can just join the text
-    text = " ".join([segment["text"] for segment in result["segments"]])
+    text = " ".join([segment["text"] for segment in result["segments"]]).strip()
     print("📝 Generated text")
 
     return text
