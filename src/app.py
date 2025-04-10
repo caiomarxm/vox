@@ -1,13 +1,10 @@
 import os
-import platform
 import threading
-import time
 
-import pyautogui
-import pyperclip
 from pynput import keyboard
 from pynput.keyboard import Key
 
+from src.core.system.clipboard import paste_content
 from src.core.system.recording import audio_recorder
 from src.core.transcribe.transcribe import transcribe_audio
 
@@ -18,25 +15,6 @@ RECORDING_HOTKEY = {
 }
 
 current_keys = set()
-
-
-# TODO: Find a better place for this function
-def paste_transcription(transcription: str):
-    pyperclip.copy(transcription)
-
-    time.sleep(0.1)
-
-    # Simulate paste shortcut depending on OS
-    if platform.system() == "Darwin":  # macOS
-        print("🍎 macOS detected")
-        command_key = "command"
-    else:  # Windows/Linux
-        print("🪟 Windows/Linux detected")
-        command_key = "ctrl"
-
-    pyautogui.keyDown(command_key)
-    pyautogui.press("v")
-    pyautogui.keyUp(command_key)
 
 
 #
@@ -53,7 +31,7 @@ def on_activate():
         transcription = transcribe_audio(filename)
         print(f"🔊 Transcription: {transcription}")
 
-        paste_transcription(transcription)
+        paste_content(transcription)
         print("✅ Copied transcription to clipboard")
 
         os.remove(filename)
