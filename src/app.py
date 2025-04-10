@@ -1,14 +1,13 @@
 import platform
 import threading
 import time
-import wave
 
-import pyaudio
 import pyautogui
 import pyperclip
 from pynput import keyboard
 from pynput.keyboard import Key
 
+from src.core.system.recording import start_recording, stop_recording
 from src.core.transcribe.transcribe import transcribe_audio
 
 # Define your hotkey (e.g. Option + Space on macOS)
@@ -18,69 +17,6 @@ RECORDING_HOTKEY = {
 }
 
 current_keys = set()
-
-
-# Audio settings
-FORMAT = pyaudio.paInt16
-CHANNELS = 1
-RATE = 44100
-CHUNK = 1024
-FILENAME = "recorded_audio.wav"
-
-# Global variables
-audio = pyaudio.PyAudio()
-stream = None
-frames = []
-is_recording = False
-
-
-#
-# Handle Audio
-#
-
-
-def start_recording():
-    global stream, frames, is_recording
-    if is_recording:
-        print("⚠️ Already recording!")
-        return
-
-    print("🎙️ Recording started...")
-    is_recording = True
-    frames = []
-
-    # Open audio stream
-    stream = audio.open(
-        format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK
-    )
-
-    def record():
-        while is_recording:
-            data = stream.read(CHUNK)
-            frames.append(data)
-
-    threading.Thread(target=record, daemon=True).start()
-
-
-def stop_recording():
-    global stream, is_recording
-    if not is_recording:
-        print("⚠️ Not recording!")
-        return
-
-    print("🛑 Recording stopped. Saving file...")
-    is_recording = False
-    stream.stop_stream()
-    stream.close()
-
-    # Save to file
-    with wave.open(FILENAME, "wb") as wf:
-        wf.setnchannels(CHANNELS)
-        wf.setsampwidth(audio.get_sample_size(FORMAT))
-        wf.setframerate(RATE)
-        wf.writeframes(b"".join(frames))
-
-    print(f"✅ Saved recording to {FILENAME}")
 
 
 # TODO: Find a better place for this function
@@ -118,8 +54,8 @@ def on_activate():
         start_recording()
     else:
         print("🛑 Recording stopped.")
-        stop_recording()
-        transcription = transcribe_audio(FILENAME)
+        filename = stop_recording()
+        transcription = transcribe_audio(filename)
         print(f"🔊 Transcription: {transcription}")
         paste_transcription(transcription)
         print("✅ Copied transcription to clipboard")
