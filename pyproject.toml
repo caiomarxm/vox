@@ -11,6 +11,7 @@ dependencies = [
     "pydantic-settings>=2.8.1",
     "pynput>=1.8.1",
     "pyperclip>=1.9.0",
+    "tenacity>=9.1.2",
     "torch>=2.1.0",
     "whisperx>=3.3.1",
 ]
